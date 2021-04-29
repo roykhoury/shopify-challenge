@@ -1,0 +1,30 @@
+scalar Upload
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Image {
+    id: ID!
+    cloudinaryId: String!
+    title: String!
+    url: String!
+    tags: [Tag]
+}
+
+type Tag {
+    id: ID!
+    value: String!
+    image: Image!
+}
+
+type Query {
+    imageFromTag(tags : [String!]!): [Image]
+    imageFromSimilarImage(files: [Upload!]!): [Image]
+    allImages : [Image]
+}
+
+type Mutation {
+    createImage(files: [Upload!]!, title: String!) : [Image]
+}
