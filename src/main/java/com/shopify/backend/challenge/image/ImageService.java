@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.shopify.backend.challenge.common.CloudinaryUtils.uploaderConfig;
 import static com.shopify.backend.challenge.common.CollectionUtils.distinctByKey;
 
 @Service
@@ -29,45 +30,33 @@ public class ImageService {
 
     public List<Image> uploadImages(List<Part> parts, String title) throws IOException {
         List<Image> images = new ArrayList<>();
-        Map optionMap = ObjectUtils.asMap(
-                "resource_type", "image",
-                "categorization", "aws_rek_tagging",
-                "auto_tagging", "0.5"
-        );
-
         for (Part part : parts) {
-            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), optionMap);
+            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfig);
             images.add(Image.builder()
-                    .cloudinaryId(uploadResult.get("public_id").toString())
-                    .url(uploadResult.get("secure_url").toString())
-                    .tags(TagUtils.fromString(uploadResult.get("tags").toString()))
-                    .title(title)
-                    .build());
+                .cloudinaryId(uploadResult.get("public_id").toString())
+                .url(uploadResult.get("secure_url").toString())
+                .tags(TagUtils.fromString(uploadResult.get("tags").toString()))
+                .title(title)
+                .build());
         }
-
         return imageRepository.saveAll(images);
     }
 
-    public List<Image> findByTags(List<Tag> tags) {
-        List<Image> images = new ArrayList<>();
-        tags.forEach(t -> tagRepository.findDistinctTopByValue(t.getValue())
-                .flatMap(imageRepository::findDistinctByTags)
-                .ifPresent(images::add));
-        return images;
+    public List<Image> findByTags(String[] tags) {
+        List<Long> ids = tagRepository.findAllByValueIn(tags)
+                .stream()
+                .map(Tag::getImage)
+                .map(Image::getId)
+                .collect(Collectors.toList());
+        return imageRepository.findAllByIdIn(ids);
     }
 
     public List<Image> findBySimilarImage(List<Part> parts) throws IOException {
         List<Image> images = new ArrayList<>();
-        Map optionMap = ObjectUtils.asMap(
-                "resource_type", "image",
-                "categorization", "aws_rek_tagging",
-                "auto_tagging", "0.5"
-        );
-
         for (Part part : parts) {
-            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), optionMap);
-            List<Tag> tags = TagUtils.fromString(uploadResult.get("tags").toString());
-            images.addAll(findByTags(tags));
+            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfig);
+            String tagsString = uploadResult.get("tags").toString().replaceAll("^.|.$", "");
+            images.addAll(findByTags(tagsString.split(", ?")));
             cloudinary.uploader().destroy(uploadResult.get("public_id").toString(), ObjectUtils.emptyMap());
         }
         return images.stream()

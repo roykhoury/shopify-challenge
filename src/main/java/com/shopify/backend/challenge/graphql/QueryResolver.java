@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -20,8 +19,7 @@ public class QueryResolver implements GraphQLQueryResolver {
 
     private final ImageService service;
 
-    public List<Image> imageFromTag(String[] tagStrings) {
-        List<Tag> tags = TagUtils.fromString(Arrays.toString(tagStrings));
+    public List<Image> imageFromTag(String[] tags) {
         return service.findByTags(tags);
     }
 

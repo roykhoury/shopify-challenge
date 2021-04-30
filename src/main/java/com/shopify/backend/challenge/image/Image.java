@@ -28,7 +28,7 @@ import java.util.List;
 public class Image  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String cloudinaryId;
 
