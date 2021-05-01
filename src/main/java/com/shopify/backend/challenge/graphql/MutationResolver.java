@@ -15,10 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 public class MutationResolver implements GraphQLMutationResolver {
 
-    private ImageService service;
+    private final ImageService service;
 
     // List<Part> parts must still be included, for the sake of signature, however is never populated
-    public List<Image> createImage(List<Part> parts, String title, DataFetchingEnvironment env) throws IOException {
-        return service.uploadImages(env.getArgument("files"), title);
+    public List<Image> createImage(List<Part> parts, DataFetchingEnvironment env) throws IOException {
+        return service.uploadImages(env.getArgument("files"));
     }
 }

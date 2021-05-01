@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.shopify.backend.challenge.common.CloudinaryUtils.uploaderConfig;
-import static com.shopify.backend.challenge.common.CollectionUtils.distinctByKey;
+import static com.shopify.backend.challenge.common.CloudinaryConfig.uploaderConfigMap;
 
 @Service
 @AllArgsConstructor
@@ -28,16 +27,15 @@ public class ImageService {
     private final TagRepository tagRepository;
     private final Cloudinary cloudinary;
 
-    public List<Image> uploadImages(List<Part> parts, String title) throws IOException {
+    public List<Image> uploadImages(List<Part> parts) throws IOException {
         List<Image> images = new ArrayList<>();
         for (Part part : parts) {
-            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfig);
+            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfigMap);
             images.add(Image.builder()
-                .cloudinaryId(uploadResult.get("public_id").toString())
-                .url(uploadResult.get("secure_url").toString())
-                .tags(TagUtils.fromString(uploadResult.get("tags").toString()))
-                .title(title)
-                .build());
+                    .cloudinaryId(String.valueOf(uploadResult.get("public_id")))
+                    .url(String.valueOf(uploadResult.get("secure_url")))
+                    .tags(TagUtils.fromString(String.valueOf(uploadResult.get("tags"))))
+                    .build());
         }
         return imageRepository.saveAll(images);
     }
@@ -51,17 +49,14 @@ public class ImageService {
         return imageRepository.findAllByIdIn(ids);
     }
 
-    public List<Image> findBySimilarImage(List<Part> parts) throws IOException {
-        List<Image> images = new ArrayList<>();
-        for (Part part : parts) {
-            Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfig);
-            String tagsString = uploadResult.get("tags").toString().replaceAll("^.|.$", "");
-            images.addAll(findByTags(tagsString.split(", ?")));
-            cloudinary.uploader().destroy(uploadResult.get("public_id").toString(), ObjectUtils.emptyMap());
-        }
-        return images.stream()
-                .filter(distinctByKey(Image::getId))
-                .collect(Collectors.toList());
+    public List<Image> findBySimilarImage(Part part) throws IOException {
+        Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfigMap);
+        cloudinary.uploader().destroy(String.valueOf(uploadResult.get("public_id")), ObjectUtils.emptyMap());
+
+        String tagsString = String.valueOf(uploadResult.get("tags"));
+        String[] parsedTags = tagsString.replaceAll("^.|.$", "").split(", ?");
+
+        return findByTags(parsedTags);
     }
 
     public List<Image> getAllImages() {

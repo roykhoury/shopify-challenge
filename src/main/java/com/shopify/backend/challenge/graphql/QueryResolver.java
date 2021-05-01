@@ -2,9 +2,7 @@ package com.shopify.backend.challenge.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.shopify.backend.challenge.image.Image;
-import com.shopify.backend.challenge.tag.Tag;
 import com.shopify.backend.challenge.image.ImageService;
-import com.shopify.backend.challenge.tag.TagUtils;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,8 +21,8 @@ public class QueryResolver implements GraphQLQueryResolver {
         return service.findByTags(tags);
     }
 
-    public List<Image> imageFromSimilarImage(List<Part> parts, DataFetchingEnvironment env) throws IOException {
-        return service.findBySimilarImage(env.getArgument("files"));
+    public List<Image> imageFromSimilarImage(Part part, DataFetchingEnvironment env) throws IOException {
+        return service.findBySimilarImage(env.getArgument("file"));
     }
 
     public List<Image> allImages() {

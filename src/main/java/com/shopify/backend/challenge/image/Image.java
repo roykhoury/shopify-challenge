@@ -32,8 +32,6 @@ public class Image  {
 
     private String cloudinaryId;
 
-    private String title;
-
     private String url;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
