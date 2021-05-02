@@ -10,9 +10,13 @@ import java.util.stream.Stream;
 public class TagUtils {
 
     /** Convert [1, 2, 3] string into list of tag objects with values 1, 2 and 3 */
-    public static List<Tag> fromString(String tagString) {
-        return Stream.of(tagString.substring(1, tagString.length()-1).split(", ?"))
+    public static List<Tag> fromStringToList(String tagString) {
+        return Stream.of(tagString.replaceAll("^.|.$", "").split(", ?"))
                 .map(v -> Tag.builder().value(v).build())
                 .collect(Collectors.toList());
+    }
+
+    public static String[] fromStringToArray(String tagString) {
+        return tagString.replaceAll("^.|.$", "").split(", ?");
     }
 }

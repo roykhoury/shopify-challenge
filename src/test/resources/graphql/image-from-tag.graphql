@@ -1,0 +1,9 @@
+query {
+    imageFromTag(tags: ["cute", "pet"]) {
+        url
+        cloudinaryId
+        tags {
+            value
+        }
+    }
+}

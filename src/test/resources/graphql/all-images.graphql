@@ -1,0 +1,9 @@
+query {
+    allImages {
+        url
+        cloudinaryId
+        tags {
+            value
+        }
+    }
+}

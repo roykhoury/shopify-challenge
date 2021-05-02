@@ -1,0 +1,9 @@
+query {
+    imageFromSimilarImage(file: "file-content") {
+        url
+        cloudinaryId
+        tags {
+            value
+        }
+    }
+}

@@ -2,7 +2,7 @@ package com.shopify.backend.challenge.graphql;
 
 import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
-import graphql.servlet.core.GraphQLErrorHandler;
+import graphql.kickstart.execution.error.GraphQLErrorHandler;
 
 import java.util.ArrayList;
 import java.util.List;

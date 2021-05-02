@@ -94,14 +94,13 @@ class ImageServiceTest {
         // We don't want to connect to cloudinary at all, so stub and return empty results
         when(cloudinary.uploader()).thenReturn(uploader);
         when(part.getInputStream()).thenReturn(EmptyInputStream.nullInputStream());
-        when(uploader.uploadLarge(part.getInputStream(), CloudinaryConfig.uploaderConfigMap)).thenReturn(ObjectUtils.emptyMap());
+        when(uploader.uploadLarge(part.getInputStream(), CloudinaryConfig.uploaderConfigMap)).thenReturn(TEST_CLOUDINARY_RESPONSE);
         when(uploader.destroy(TEST_CLOUDINARY_ID_A, ObjectUtils.emptyMap())).thenReturn(ObjectUtils.emptyMap());
 
-        String[] tags = { CUTE_TAG_VALUE, PET_TAG_VALUE };
         imageService.findBySimilarImage(part);
 
         // Verification is sufficient in this case, because findByTags has already been tested
-        verify(imageService).findByTags(tags);
+        verify(imageService).findByTags(TEST_TAG_ARRAY);
         verify(uploader).uploadLarge(part.getInputStream(), CloudinaryConfig.uploaderConfigMap);
         verify(uploader).destroy(TEST_CLOUDINARY_ID_A, ObjectUtils.emptyMap());
     }

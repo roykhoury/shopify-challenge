@@ -1,11 +1,13 @@
 package com.shopify.backend.challenge.common;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.shopify.backend.challenge.image.Image;
 import com.shopify.backend.challenge.tag.Tag;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @UtilityClass
 public class CommonTestConstants {
@@ -46,5 +48,20 @@ public class CommonTestConstants {
     public static final List<Tag> TEST_TAG_LIST = Arrays.asList(
             TEST_TAG_A,
             TEST_TAG_B
+    );
+
+    public static final String TEST_TAG_STRING = "[" +
+            CUTE_TAG_VALUE + ", " +
+            PET_TAG_VALUE +
+            "]";
+
+    public static final String[] TEST_TAG_ARRAY = {
+            CUTE_TAG_VALUE,
+            PET_TAG_VALUE
+    };
+
+    public static final Map TEST_CLOUDINARY_RESPONSE = ObjectUtils.asMap(
+            "public_id", TEST_CLOUDINARY_ID_A,
+            "tags", TEST_TAG_STRING
     );
 }

@@ -1,8 +1,8 @@
 package com.shopify.backend.challenge.graphql;
 
+import graphql.kickstart.execution.error.GraphQLErrorHandler;
+import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
-import graphql.servlet.core.ApolloScalars;
-import graphql.servlet.core.GraphQLErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

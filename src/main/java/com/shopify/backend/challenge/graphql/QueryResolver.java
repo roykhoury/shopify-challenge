@@ -1,8 +1,8 @@
 package com.shopify.backend.challenge.graphql;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.shopify.backend.challenge.image.Image;
 import com.shopify.backend.challenge.image.ImageService;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

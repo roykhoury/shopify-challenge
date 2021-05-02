@@ -34,7 +34,7 @@ public class ImageService {
             images.add(Image.builder()
                     .cloudinaryId(String.valueOf(uploadResult.get("public_id")))
                     .url(String.valueOf(uploadResult.get("secure_url")))
-                    .tags(TagUtils.fromString(String.valueOf(uploadResult.get("tags"))))
+                    .tags(TagUtils.fromStringToList(String.valueOf(uploadResult.get("tags"))))
                     .build());
         }
         return imageRepository.saveAll(images);
@@ -53,8 +53,8 @@ public class ImageService {
         Map uploadResult = cloudinary.uploader().uploadLarge(part.getInputStream(), uploaderConfigMap);
         cloudinary.uploader().destroy(String.valueOf(uploadResult.get("public_id")), ObjectUtils.emptyMap());
 
-        String tagsString = String.valueOf(uploadResult.get("tags"));
-        String[] parsedTags = tagsString.replaceAll("^.|.$", "").split(", ?");
+        String tagString = String.valueOf(uploadResult.get("tags"));
+        String[] parsedTags = TagUtils.fromStringToArray(tagString);
 
         return findByTags(parsedTags);
     }

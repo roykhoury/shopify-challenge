@@ -1,0 +1,9 @@
+mutation {
+    createImage(files: []) {
+        url
+        cloudinaryId
+        tags {
+            value
+        }
+    }
+}
