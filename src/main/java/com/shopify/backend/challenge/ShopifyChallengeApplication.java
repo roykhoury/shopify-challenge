@@ -16,17 +16,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@SpringBootConfiguration
-@EnableAutoConfiguration
-@ComponentScan(
-        excludeFilters = {@ComponentScan.Filter(
-                type = FilterType.CUSTOM,
-                classes = { TypeExcludeFilter.class}
-        ), @ComponentScan.Filter(
-                type = FilterType.CUSTOM,
-                classes = { AutoConfigurationExcludeFilter.class}
-        )}
-)
+@SpringBootApplication
 public class ShopifyChallengeApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShopifyChallengeApplication.class, args);
